@@ -33,14 +33,28 @@ fragment_shader = """
 layout(location = 0) out vec4 fragColor;
 
 uniform int clock;
+uniform int shadernumber;
 in vec3 mycolor;
 
 void main()
 {
-  if (mod(clock/10, 2) == 0) {
-    fragColor = vec4(mycolor.xyz, 1.0f);
-  } else {
-    fragColor = vec4(mycolor.zxy, 1.0f);
+  if (shadernumber == 1) {
+    if (mod(clock/10, 2) == 0) {
+      fragColor = vec4(mycolor.xyz, 10.0f);
+    } else if (mod(clock/10, 2) == 1) {
+      fragColor = vec4(mycolor.zxy, 12.0f);
+    } else if (mod(clock/10, 2) == 2) {
+      fragColor = vec4(mycolor.yzx, 11.0f);
+    }
+  }
+  else if (shadernumber == 2) {
+    fragColor = vec4(mycolor.yyx, 1.0f);
+  }
+  else if (shadernumber == 3) {
+    fragColor = vec4(mycolor.yyy, 1.0f);
+  }
+  else {
+    fragColor = vec4(mycolor.xxx, 1.0f);
   }
 }
 """
@@ -116,6 +130,8 @@ def render(rotacion, zoom, posicion):
 
 glViewport(0, 0, 1200, 720)
 
+# Default shader
+shadernumber = 1
 rotacion = 180
 posicion = 0
 zoom = -20
@@ -130,6 +146,10 @@ while running:
   glUniform1i(
     glGetUniformLocation(shader, 'clock'),
     rotacion
+  )
+  glUniform1i(
+    glGetUniformLocation(shader, 'shadernumber'),
+    shadernumber
   )
 
   glDrawElements(GL_TRIANGLES, len(index_data), GL_UNSIGNED_INT, None)
@@ -150,6 +170,18 @@ while running:
         posicion -= 1
       if event.key == pygame.K_w or event.key == pygame.K_UP:
         posicion += 1
+      if event.key == 49:
+        print('Setting shader to 1')
+        shadernumber = 1
+      if event.key == 50:
+        print('Setting shader to 2')
+        shadernumber = 2
+      if event.key == 51:
+        print('Setting shader to 3')
+        shadernumber = 3
+      if event.key == 52:
+        print('Setting shader to 4')
+        shadernumber = 4
     if event.type == pygame.KEYUP:
       longpress = False
       if event.key == pygame.K_a:
