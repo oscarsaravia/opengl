@@ -48,7 +48,12 @@ void main()
     }
   }
   else if (shadernumber == 2) {
-    fragColor = vec4(mycolor.yyx, 1.0f);
+    if (mod((shadernumber/10), 2) == 0) {
+      fragColor = vec4(mycolor.yyx, 1.0f);
+    }
+    else {
+      fragColor = vec4(mycolor.yzx, 1.0f);
+    }
   }
   else if (shadernumber == 3) {
     fragColor = vec4(mycolor.yyy, 1.0f);
